@@ -1345,15 +1345,31 @@ class Query_Posts extends Base_Query {
     }
     // La QUERY
     public function query_the_elements() {
-        $settings = $this->get_settings_for_display();
-        if (empty($settings))
-            return;
 
         /** @var Module_Query $elementor_query */
         //$elementor_query = Module_Query::instance();
         //$this->query = $elementor_query->get_query( $this, 'posts', $query_args, [] );
         
+        $args = $this->get_query_args();
+
+        /*
+        -------- COMMENTS -------
+        */
+        //var_dump($args);
+        $query = new \WP_Query( $args );
+        
+        do_action( 'elementor/query/query_results', $query, $this);
+        
+        $this->query = $query;
+    }
+    
+    public function get_query_args() {        
+        
         $args = array();
+        
+        $settings = $this->get_settings_for_display();
+        if (empty($settings))
+            return;
         /*
         'post_type'
         --'post_status'
@@ -1520,14 +1536,9 @@ class Query_Posts extends Base_Query {
                     break;
             }
         }
-
-        /*
-        -------- COMMENTS -------
-        */
-        //var_dump($args);
-        $query_p = new \WP_Query( $args );
-        $this->query = $query_p;
+        return $args;
     }
+    
     protected function get_search_filter($settings){
         /*
         'search_field_value'
