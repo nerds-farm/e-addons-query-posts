@@ -3,7 +3,7 @@
 /**
  *
  * @wordpress-plugin
- * Plugin Name:       e-addons Query Posts
+ * Plugin Name:       e-addons Query POSTS
  * Plugin URI:        https://e-addons.com
  * Description:       The must have Elementor suite for Nerds
  * Version:           1.0.1
