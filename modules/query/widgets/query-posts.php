@@ -301,6 +301,12 @@ class Query_Posts extends Base_Query {
           'satic_list'
          */
         $this->add_control(
+            'query_debug', [
+                'label' => '<span style="color: #fff; background-color: #93003c; padding: 5px 10px; border-radius: 20px;">'.__('Show query for DEBUG', 'e-addons').'</span>',
+                'type' => Controls_Manager::SWITCHER,
+            ]
+        );
+        $this->add_control(
                 'query_type', [
             'label' => __('Query Type', 'e-addons'),
             'type' => 'ui_selector',
@@ -1344,8 +1350,14 @@ class Query_Posts extends Base_Query {
 
         /*
           -------- COMMENTS -------
-         */
-        //echo '<pre>'; var_dump($args); echo '</pre>';
+        */
+
+        // DEBUG
+        if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
+            if(!empty($this->get_settings_for_display('query_debug'))){
+                echo '<pre>'; var_dump($args); echo '</pre>';
+            }
+        }
         $query = new \WP_Query($args);
 
         do_action('elementor/query/query_results', $query, $this);
@@ -1690,7 +1702,7 @@ class Query_Posts extends Base_Query {
             // 1 - leggo tutti i termini di questa taxonomy
             $taxterms = get_terms(array(
                 'taxonomy' => $tax,
-                'hide_empty' => true,
+                'hide_empty' => false,
                     ));
             // 2 - li confronto con quelli selezionati e ne ricavo solo quelli di qusta taxonomy
             foreach ($taxterms as $term) {
