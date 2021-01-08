@@ -1434,7 +1434,6 @@ class Query_Posts extends Base_Query {
             case 'automatic_mode':
                 global $wp_query;
                 //echo '<pre>'; var_dump($wp_query); echo '</pre>';
-
                 if (is_singular()) {
                     $post = get_post();
                     $args['post_type'] = $post->post_type;
@@ -1466,17 +1465,13 @@ class Query_Posts extends Base_Query {
             case 'custommeta_source':
                 $custommeta_source_key = $settings['custommeta_source_key'];
                 //$custommeta_source_type = $settings['custommeta_source_type'];
-
-                if (empty($custommeta_source_key))
+                if (empty($settings['custommeta_source_key'])) {
                     return;
-
+                }
                 $type_of_location = Query_Utils::is_type_of();
                 $id_of_location = Query_Utils::is_id_of();
-
-                $custommeta_source_value = get_metadata($type_of_location, $id_of_location, $custommeta_source_key, true);
-
+                $custommeta_source_value = get_metadata($type_of_location, $id_of_location, $settings['custommeta_source_key'], true);
                 if (!empty($custommeta_source_value)) {
-
                     // default args
                     $args['posts_per_page'] = -1;
                     $args['orderby'] = 'post__in';
@@ -1486,7 +1481,6 @@ class Query_Posts extends Base_Query {
                 }
                 break;
             case 'specific_posts':
-
                 //
                 $repeater_specific_posts = $settings['repeater_specific_posts'];
                 $items_specific_posts = array();
@@ -1547,11 +1541,9 @@ class Query_Posts extends Base_Query {
           'search_field_value'
          */
         $search_args = array();
-
-        $search_field_value = $settings['search_field_value'];
-        if (!empty($search_field_value))
-            $search_args['s'] = $search_field_value;
-
+        if (!empty($settings['search_field_value'])) {
+            $search_args['s'] = $settings['search_field_value'];
+        }
         /*
           $args = array(
           'search'         => 'Rami',
@@ -1630,9 +1622,10 @@ class Query_Posts extends Base_Query {
             ));
         }
 
-        $keysquery['relation'] = $settings['metakey_combination'];
-
-        $metakey_args['meta_query'] = $keysquery;
+        if (!empty($keysquery)) {
+            $keysquery['relation'] = $settings['metakey_combination'];
+            $metakey_args['meta_query'] = $keysquery;
+        }
         //var_dump($taxquery);
         //
         return $metakey_args;
@@ -1735,13 +1728,20 @@ class Query_Posts extends Base_Query {
             //var_dump($filtred_terms);
         }
 
-        $taxquery_inc['relation'] = $settings['include_term_combination'];
-        $taxquery_exc['relation'] = $settings['exclude_term_combination'];
-        $taxquery = [$taxquery_inc, $taxquery_exc];
-        $taxquery['relation'] = 'AND';
-        //
-        $terms_args['tax_query'] = $taxquery;
-
+        if (!empty($taxquery_inc)) {
+            $taxquery_inc['relation'] = $settings['include_term_combination'];
+            $taxquery[] = $taxquery_inc;
+        }
+        
+        if (!empty($taxquery_exc)) {
+            $taxquery_exc['relation'] = $settings['exclude_term_combination'];
+            $taxquery[] = $taxquery_exc;
+        }
+        
+        if (!empty($taxquery)) {
+            $taxquery['relation'] = 'AND';
+            $terms_args['tax_query'] = $taxquery;
+        }
         //var_dump($taxquery);
         //
         return $terms_args;
