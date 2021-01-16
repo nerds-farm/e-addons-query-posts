@@ -231,7 +231,7 @@ class Query_Posts extends Base_Query {
                             [
                                 'name' => 'metafield_type',
                                 'operator' => 'in',
-                                'value' => ['text', 'image', 'file']
+                                'value' => ['text', 'image', 'file', 'array']
                             ]
                         ]
                     ]
@@ -1418,13 +1418,13 @@ class Query_Posts extends Base_Query {
         // exclusion posts
         $excludedPosts = array();
         if (!empty($settings['exclude_posts'])) {
-            array_push($excludedPosts, $settings['exclude_posts']);
+            $excludedPosts = $settings['exclude_posts'];
         }
         if (!empty($settings['exclude_myself'])) {
             array_push($excludedPosts, get_the_ID());
         }
         
-        if (!empty($excludedPosts)) {
+        if ( !empty($excludedPosts) ) {
             $args['post__not_in'] = $excludedPosts;
         }
         
@@ -1702,7 +1702,7 @@ class Query_Posts extends Base_Query {
             // 1 - leggo tutti i termini di questa taxonomy
             $taxterms = get_terms(array(
                 'taxonomy' => $tax,
-                'hide_empty' => false,
+                'hide_empty' => true,
                     ));
             // 2 - li confronto con quelli selezionati e ne ricavo solo quelli di qusta taxonomy
             foreach ($taxterms as $term) {
