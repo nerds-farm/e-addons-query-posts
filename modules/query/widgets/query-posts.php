@@ -117,6 +117,7 @@ class Query_Posts extends Base_Query {
                 'item_custommeta' => __('Custom Fields', 'e-addons'),
                 'item_readmore' => __('Read More', 'e-addons'),
                 'item_label' => __('Label', 'e-addons'),
+                'item_template' => __('Template', 'e-addons'),
             ],
             'default' => '',
                 ]
@@ -156,6 +157,9 @@ class Query_Posts extends Base_Query {
 
         // +********************* Post Type
         $this->controls_items_posttype_content($repeater);
+        
+        // +********************* Template
+        $this->controls_items_template_content($repeater);
 
         // +********************* CustoFields (ACF, Pods, Toolset, Metabox)
         $this->custommeta_items($repeater, 'post');
@@ -164,6 +168,9 @@ class Query_Posts extends Base_Query {
 
         $repeater->start_controls_tab('tab_style', [
             'label' => __('Style', 'e-addons'),
+            'condition' => [
+                'item_type!' => 'item_template'
+            ]
         ]);
 
         // STYLE - TAB (9)
@@ -219,7 +226,7 @@ class Query_Posts extends Base_Query {
                     [
                         'name' => 'item_type',
                         'operator' => '!in',
-                        'value' => ['item_author', 'item_readmore', 'item_custommeta'],
+                        'value' => ['item_content', 'item_author', 'item_readmore', 'item_custommeta','item_template'],
                     ],
                     [
                         'relation' => 'and',
