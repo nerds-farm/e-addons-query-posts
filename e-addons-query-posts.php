@@ -3,7 +3,7 @@
 /**
  *
  * @wordpress-plugin
- * Plugin Name:       e-addons Query POSTS
+ * Plugin Name:       e-addons QUERY POSTS
  * Plugin URI:        https://e-addons.com
  * Description:       The must have Elementor suite for Nerds
  * Version:           1.0.1
@@ -38,7 +38,7 @@ add_action('e_addons/loaded', function() {
 add_action('plugins_loaded', function() {
     if (!function_exists('e_addons_load_plugin')) {
         add_action('admin_notices', function() {
-            $message = __('You need to activate "Elementor Free" and "e-addons Free" in order to use "e-addons Posts" plugin.', 'elementor');
+            $message = __('You need to activate "Elementor Free" and "e-addons Free" in order to use "e-addons QUERY Posts" plugin.', 'elementor');
             echo '<div class="notice notice-error"><p>' . $message . '</p></div>';
         });
     }
