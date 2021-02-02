@@ -1344,6 +1344,8 @@ class Query_Posts extends Base_Query {
                 ]
         );
         $this->end_controls_section();
+        
+        $this->add_no_result_section();
     }
 
     // La QUERY
