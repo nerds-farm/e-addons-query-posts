@@ -1382,67 +1382,6 @@ class Query_Posts extends Base_Query {
         if (empty($settings))
             return;
         /*
-          'post_type'
-          --'post_status'
-          --'ignore_sticky_posts'
-          --'posts_per_page'
-          --'posts_offset'
-          --'orderby'
-          --'metakey' ...
-          --'order'
-          --'exclude_myself'
-          --'exclude_posts'
-         */
-
-        // Status
-        if (!empty($settings['post_status'])) {
-            $args['post_status'] = $settings['post_status'];
-        }
-        // limit posts per page
-        if (!empty($settings['posts_per_page'])) {
-            $args['posts_per_page'] = $settings['posts_per_page'];
-        }
-        // offset
-        if (!empty($settings['posts_offset'])) {
-            $args['offset'] = $settings['posts_offset'];
-        }
-        // paginazione
-        if ((!empty($settings['pagination_enable']) ) || !empty($settings['infiniteScroll_enable'])) {
-            $args['paged'] = $this->get_current_page();
-        }
-
-        // order by
-        if (!empty($settings['orderby'])) {
-            $args['orderby'] = $settings['orderby'];
-        }
-        //meta key order
-        if (!empty($settings['metakey'])) {
-            $args['meta_key'] = $settings['metakey'];
-        }
-        // order asc-desc
-        if (!empty($settings['order'])) {
-            $args['order'] = $settings['order'];
-        }
-
-        // exclusion posts
-        $excludedPosts = array();
-        if (!empty($settings['exclude_posts'])) {
-            $excludedPosts = $settings['exclude_posts'];
-        }
-        if (!empty($settings['exclude_myself'])) {
-            array_push($excludedPosts, get_the_ID());
-        }
-        
-        if ( !empty($excludedPosts) ) {
-            $args['post__not_in'] = $excludedPosts;
-        }
-        
-        // ignore_sticky_posts
-        if (!empty($settings['ignore_sticky_posts'])) {
-            $args['post__in'] = get_option('sticky_posts');
-            $args['ignore_sticky_posts'] = (bool)$settings['ignore_sticky_posts'];
-        }
-        /*
           '1 - automatic_mode'
           '2 - get_cpt'
           '3 - post_parent'
@@ -1521,6 +1460,68 @@ class Query_Posts extends Base_Query {
 
                 break;
         }
+        /*
+          'post_type'
+          --'post_status'
+          --'ignore_sticky_posts'
+          --'posts_per_page'
+          --'posts_offset'
+          --'orderby'
+          --'metakey' ...
+          --'order'
+          --'exclude_myself'
+          --'exclude_posts'
+         */
+
+        // Status
+        if (!empty($settings['post_status'])) {
+            $args['post_status'] = $settings['post_status'];
+        }
+        // limit posts per page
+        if (!empty($settings['posts_per_page'])) {
+            $args['posts_per_page'] = $settings['posts_per_page'];
+        }
+        // offset
+        if (!empty($settings['posts_offset'])) {
+            $args['offset'] = $settings['posts_offset'];
+        }
+        // paginazione
+        if ((!empty($settings['pagination_enable']) ) || !empty($settings['infiniteScroll_enable'])) {
+            $args['paged'] = $this->get_current_page();
+        }
+
+        // order by
+        if (!empty($settings['orderby'])) {
+            $args['orderby'] = $settings['orderby'];
+        }
+        //meta key order
+        if (!empty($settings['metakey'])) {
+            $args['meta_key'] = $settings['metakey'];
+        }
+        // order asc-desc
+        if (!empty($settings['order'])) {
+            $args['order'] = $settings['order'];
+        }
+
+        // exclusion posts
+        $excludedPosts = array();
+        if (!empty($settings['exclude_posts'])) {
+            $excludedPosts = $settings['exclude_posts'];
+        }
+        if (!empty($settings['exclude_myself'])) {
+            array_push($excludedPosts, get_the_ID());
+        }
+        
+        if ( !empty($excludedPosts) ) {
+            $args['post__not_in'] = $excludedPosts;
+        }
+        
+        // ignore_sticky_posts
+        if (!empty($settings['ignore_sticky_posts'])) {
+            $args['post__in'] = get_option('sticky_posts');
+            $args['ignore_sticky_posts'] = (bool)$settings['ignore_sticky_posts'];
+        }
+        
         /*
           'query_filter'
           'date'
