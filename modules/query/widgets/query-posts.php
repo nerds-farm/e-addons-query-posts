@@ -1375,12 +1375,11 @@ class Query_Posts extends Base_Query {
     }
 
     public function get_query_args() {
-
-        $args = array();
-
         $settings = $this->get_settings_for_display();
         if (empty($settings))
             return;
+        
+        $args = array();
         /*
           '1 - automatic_mode'
           '2 - get_cpt'
