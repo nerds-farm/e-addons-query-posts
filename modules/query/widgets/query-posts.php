@@ -1177,7 +1177,7 @@ class Query_Posts extends Base_Query {
                     'query_type' => 'metas',
                     'object_type' => 'post',
                     'default' => 'nickname',
-                    'description' => __('Selected Post Meta value. il meta deve restituire un\'elemento di tipo array o stringa separata da virgola che contiene gli ID di tipo autore. (es: array[5,27,88] o 5,27,88)', 'e-addons'),
+                    'description' => __('Selected Post Meta value. The meta must return an element of type array or comma separated string containing author IDs. (es: array[5,27,88] o 5,27,88)', 'e-addons'),
                     'condition' => [
                         'author_from' => 'custom_meta',
                         'query_filter' => 'author'
@@ -1592,9 +1592,6 @@ class Query_Posts extends Base_Query {
                 if (!empty($settings['include_author'])) {
                     $author_args['author__in'] = $settings['include_author'];
                 }
-                if (!empty($settings['exclude_author'])) {
-                    $author_args['author__not_in'] = $settings['exclude_author'];
-                }
                 break;
             case 'custom_meta':
                 if (!empty($settings['author_field_meta'])) {
@@ -1605,6 +1602,10 @@ class Query_Posts extends Base_Query {
                 $author_id = get_the_author_meta('ID');
                 $author_args['author'] = $author_id;
                 break;
+        }
+        //
+        if (!empty($settings['exclude_author'])) {
+            $author_args['author__not_in'] = $settings['exclude_author'];
         }
         return $author_args;
     }
@@ -1698,7 +1699,6 @@ class Query_Posts extends Base_Query {
         if (!empty($settings['exclude_term'])) {
             $terms_excluded = $settings['exclude_term'];
         }
-
         //risolvo bug quando il dato è una stringa o numero e non Array, quindi converto.
         if(!is_array($terms_included)){
             $terms_included = explode( ',', $terms_included );
