@@ -607,7 +607,7 @@ class Query_Posts extends Base_Query {
             'type' => Controls_Manager::SWITCHER,
             'default' => 'yes',
             'condition' => [
-                'query_type' => ['get_cpt', 'automatic_mode']
+                'query_type' => ['get_cpt']
             ]
                 ]
         );
@@ -1052,11 +1052,11 @@ class Query_Posts extends Base_Query {
                                 'name' => 'include_term',
                                 'operator' => '!=',
                                 'value' => [],
-                            ],
+                            ]/*,
                             [
                                 'name' => 'term_from',
                                 'value' => 'post_term',
-                            ],
+                            ],*/
                         ]
                     ]
                 ]
@@ -1073,7 +1073,7 @@ class Query_Posts extends Base_Query {
                     'multiple' => true,
                     'condition' => [
                         'query_filter' => 'term',
-                        'term_from' => 'post_term'
+                        //'term_from' => 'post_term'
                     ],
                 ]
         );
@@ -1115,11 +1115,11 @@ class Query_Posts extends Base_Query {
                                 'name' => 'exclude_term',
                                 'operator' => '!=',
                                 'value' => [],
-                            ],
+                            ]/*,
                             [
                                 'name' => 'term_from',
                                 'value' => 'post_term',
-                            ],
+                            ],*/
                         ]
                     ]
                 ]
@@ -1678,9 +1678,6 @@ class Query_Posts extends Base_Query {
                 if (!empty($settings['include_term'])) {
                     $terms_included = $settings['include_term'];
                 }
-                if (!empty($settings['exclude_term'])) {
-                    $terms_excluded = $settings['exclude_term'];
-                }
                 break;
             case 'custom_meta':
                 if (!empty($settings['term_field_meta'])) {
@@ -1694,10 +1691,23 @@ class Query_Posts extends Base_Query {
                         array_push($terms_included, $term->term_id);
                     }
                 }
-                //var_dump($terms_included);
+                
                 break;
         }
+        // l'esclusione vale in ogni caso, permette di mmodellare la queri in caso di termini multipli
+        if (!empty($settings['exclude_term'])) {
+            $terms_excluded = $settings['exclude_term'];
+        }
 
+        //risolvo bug quando il dato è una stringa o numero e non Array, quindi converto.
+        if(!is_array($terms_included)){
+            $terms_included = explode( ',', $terms_included );
+        }
+        if(!is_array($terms_exclude)){
+            $terms_exclude = explode( ',', $terms_exclude );
+        }
+        //var_dump($terms_included);
+        
         //
         $taxquery = array();
         $taxquery_inc = array();
