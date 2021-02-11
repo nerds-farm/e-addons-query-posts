@@ -617,7 +617,7 @@ class Query_Posts extends Base_Query {
             'type' => Controls_Manager::SWITCHER,
             'default' => 'yes',
             'condition' => [
-                'query_type' => ['get_cpt', 'automatic_mode']
+                'query_type' => ['get_cpt']
             ]
                 ]
         );
@@ -1062,11 +1062,11 @@ class Query_Posts extends Base_Query {
                                 'name' => 'include_term',
                                 'operator' => '!=',
                                 'value' => [],
-                            ],
+                            ]/*,
                             [
                                 'name' => 'term_from',
                                 'value' => 'post_term',
-                            ],
+                            ],*/
                         ]
                     ]
                 ]
@@ -1083,7 +1083,7 @@ class Query_Posts extends Base_Query {
                     'multiple' => true,
                     'condition' => [
                         'query_filter' => 'term',
-                        'term_from' => 'post_term'
+                        //'term_from' => 'post_term'
                     ],
                 ]
         );
@@ -1125,11 +1125,11 @@ class Query_Posts extends Base_Query {
                                 'name' => 'exclude_term',
                                 'operator' => '!=',
                                 'value' => [],
-                            ],
+                            ]/*,
                             [
                                 'name' => 'term_from',
                                 'value' => 'post_term',
-                            ],
+                            ],*/
                         ]
                     ]
                 ]
@@ -1187,7 +1187,7 @@ class Query_Posts extends Base_Query {
                     'query_type' => 'metas',
                     'object_type' => 'post',
                     'default' => 'nickname',
-                    'description' => __('Selected Post Meta value. il meta deve restituire un\'elemento di tipo array o stringa separata da virgola che contiene gli ID di tipo autore. (es: array[5,27,88] o 5,27,88)', 'e-addons'),
+                    'description' => __('Selected Post Meta value. The meta must return an element of type array or comma separated string containing author IDs. (es: array[5,27,88] o 5,27,88)', 'e-addons'),
                     'condition' => [
                         'author_from' => 'custom_meta',
                         'query_filter' => 'author'
@@ -1602,9 +1602,6 @@ class Query_Posts extends Base_Query {
                 if (!empty($settings['include_author'])) {
                     $author_args['author__in'] = $settings['include_author'];
                 }
-                if (!empty($settings['exclude_author'])) {
-                    $author_args['author__not_in'] = $settings['exclude_author'];
-                }
                 break;
             case 'custom_meta':
                 if (!empty($settings['author_field_meta'])) {
@@ -1615,6 +1612,10 @@ class Query_Posts extends Base_Query {
                 $author_id = get_the_author_meta('ID');
                 $author_args['author'] = $author_id;
                 break;
+        }
+        //
+        if (!empty($settings['exclude_author'])) {
+            $author_args['author__not_in'] = $settings['exclude_author'];
         }
         return $author_args;
     }
@@ -1688,9 +1689,6 @@ class Query_Posts extends Base_Query {
                 if (!empty($settings['include_term'])) {
                     $terms_included = $settings['include_term'];
                 }
-                if (!empty($settings['exclude_term'])) {
-                    $terms_excluded = $settings['exclude_term'];
-                }
                 break;
             case 'custom_meta':
                 if (!empty($settings['term_field_meta'])) {
@@ -1704,10 +1702,22 @@ class Query_Posts extends Base_Query {
                         array_push($terms_included, $term->term_id);
                     }
                 }
-                //var_dump($terms_included);
+                
                 break;
         }
-
+        // l'esclusione vale in ogni caso, permette di mmodellare la queri in caso di termini multipli
+        if (!empty($settings['exclude_term'])) {
+            $terms_excluded = $settings['exclude_term'];
+        }
+        //risolvo bug quando il dato è una stringa o numero e non Array, quindi converto.
+        if(!is_array($terms_included)){
+            $terms_included = explode( ',', $terms_included );
+        }
+        if(!is_array($terms_exclude)){
+            $terms_exclude = explode( ',', $terms_exclude );
+        }
+        //var_dump($terms_included);
+        
         //
         $taxquery = array();
         $taxquery_inc = array();
