@@ -59,6 +59,7 @@ class Query_Posts extends Base_Query {
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Dualslider($this));
         //$this->add_skin( new \EAddonsForElementor\Modules\Query\Skins\Gridfilters( $this ) );
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Timeline($this));
+        $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Table($this));
         /*
           $this->add_skin( new \EAddonsQuery\Modules\Query\Skins\Gridtofullscreen3d( $this ) );
           $this->add_skin( new \EAddonsQuery\Modules\Query\Skins\Crossroadsslideshow( $this ) );
@@ -122,6 +123,8 @@ class Query_Posts extends Base_Query {
             'default' => '',
                 ]
         );
+        
+        
 
         // TABS ----------
         $repeater->start_controls_tabs('items_repeater_tab');
@@ -129,6 +132,13 @@ class Query_Posts extends Base_Query {
         $repeater->start_controls_tab('tab_content', [
             'label' => __('Content', 'e-addons'),
         ]);
+        
+        $repeater->add_control(
+                'item_label', [
+            'label' => __('Item Label', 'e-addons'),
+            'type' => Controls_Manager::TEXT,
+                ]
+        );
 
         // CONTENT - TAB
         // +********************* Label
