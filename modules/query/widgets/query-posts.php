@@ -103,20 +103,10 @@ class Query_Posts extends Base_Query {
           item_label
           todo: commets...
          */
-        
-        
-        
-
-        // TABS ----------
-        $repeater->start_controls_tabs('items_repeater_tab');
-
-        $repeater->start_controls_tab('tab_content', [
-            'label' => __('Content', 'e-addons'),
-        ]);
-        
+                
         $repeater->add_control(
                 'item_type', [
-            'label' => __('Type', 'e-addons'),
+            'label' => __('Item Type', 'e-addons'),
             'type' => Controls_Manager::SELECT,
             'options' => [
                 'item_image' => __('Image', 'e-addons'),
@@ -129,12 +119,19 @@ class Query_Posts extends Base_Query {
                 'item_posttype' => __('Post Type', 'e-addons'),
                 'item_custommeta' => __('Custom Field', 'e-addons'),
                 'item_readmore' => __('Read More', 'e-addons'),
-                'item_label' => __('HTML', 'e-addons'),
+                'item_label' => __('Static', 'e-addons'),
                 'item_template' => __('Template', 'e-addons'),
             ],
             'default' => '',
                 ]
         );
+
+        // TABS ----------
+        $repeater->start_controls_tabs('items_repeater_tab');
+
+        $repeater->start_controls_tab('tab_content', [
+            'label' => __('Content', 'e-addons'),
+        ]);
         
         $repeater->add_control(
                 'item_text_label', [
@@ -297,7 +294,7 @@ class Query_Posts extends Base_Query {
                         ]
                     ],
                     //item_type.replace("item_", "")
-                    'title_field' => '<# var etichetta = item_type; etichetta = etichetta.replace("item_", ""); #><b class="e-add-item-name"><i class="fa {{{ item_type+"-ic" }}}" aria-hidden="true"></i> {{{ etichetta }}}</b>',
+                    'title_field' => '<# var etichetta = item_type; etichetta = etichetta.replace("item_", ""); #><b class="e-add-item-name"><i class="fa {{{ item_type+"-ic" }}}" aria-hidden="true"></i> {{{item_text_label}}} | {{{ etichetta }}}</b>',
                 ]
         );
 
