@@ -1705,11 +1705,11 @@ class Query_Posts extends Base_Query {
                 
                 break;
         }
-        // l'esclusione vale in ogni caso, permette di mmodellare la queri in caso di termini multipli
+        // l'esclusione vale in ogni caso, permette di mmodellare la query in caso di termini multipli
         if (!empty($settings['exclude_term'])) {
             $terms_excluded = $settings['exclude_term'];
         }
-        //risolvo bug quando il dato è una stringa o numero e non Array, quindi converto.
+        //risolvo bug: quando il dato è una stringa o numero e non Array, quindi converto.
         if(!is_array($terms_included)){
             $terms_included = explode( ',', $terms_included );
         }
@@ -1769,12 +1769,12 @@ class Query_Posts extends Base_Query {
             //var_dump($filtred_terms);
         }
 
-        if (!empty($taxquery_inc)) {
+        if (!empty($taxquery_inc) && !empty($settings['include_term_combination'])) {
             $taxquery_inc['relation'] = $settings['include_term_combination'];
             $taxquery[] = $taxquery_inc;
         }
         
-        if (!empty($taxquery_exc)) {
+        if (!empty($taxquery_exc) && !impty($settings['exclude_term_combination'])) {
             $taxquery_exc['relation'] = $settings['exclude_term_combination'];
             $taxquery[] = $taxquery_exc;
         }
