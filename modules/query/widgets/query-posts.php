@@ -134,7 +134,7 @@ class Query_Posts extends Base_Query {
         ]);
         
         $repeater->add_control(
-                'item_label', [
+                'item_text_label', [
             'label' => __('Item Label', 'e-addons'),
             'type' => Controls_Manager::TEXT,
                 ]
@@ -1708,14 +1708,10 @@ class Query_Posts extends Base_Query {
         // l'esclusione vale in ogni caso, permette di mmodellare la queri in caso di termini multipli
         if (!empty($settings['exclude_term'])) {
             $terms_excluded = $settings['exclude_term'];
+            $terms_excluded = Utils::explode($terms_excluded);
         }
         //risolvo bug quando il dato è una stringa o numero e non Array, quindi converto.
-        if(!is_array($terms_included)){
-            $terms_included = explode( ',', $terms_included );
-        }
-        if(!is_array($terms_exclude)){
-            $terms_exclude = explode( ',', $terms_exclude );
-        }
+        $terms_included = Utils::explode( $terms_included );
         //var_dump($terms_included);
         
         //
