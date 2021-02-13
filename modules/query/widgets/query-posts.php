@@ -604,7 +604,6 @@ class Query_Posts extends Base_Query {
                     'type' => Controls_Manager::RAW_HTML,
                     'show_label' => false,
                     'raw' => '<i class="fas fa-ban" aria-hidden="true"></i> &nbsp;<b>' . __('Exclude', 'e-addons') . '</b>',
-                    'separator' => 'before',
                     'content_classes' => 'e-add-icon-heading',
                     'condition' => [
                         'query_type' => ['get_cpt', 'automatic_mode']
@@ -749,7 +748,6 @@ class Query_Posts extends Base_Query {
                     'type' => Controls_Manager::RAW_HTML,
                     'show_label' => false,
                     'raw' => '<i class="fa fa-search" aria-hidden="true"></i> ' . __('Search Filters', 'e-addons'),
-                    'separator' => 'before',
                     'content_classes' => 'e-add-icon-heading',
                     'condition' => [
                         'query_filter' => 'search'
@@ -787,7 +785,6 @@ class Query_Posts extends Base_Query {
                     'show_label' => false,
                     'raw' => '<i class="fa fa-calendar" aria-hidden="true"></i> ' . __('Date Filters', 'e-addons'),
                     'label_block' => false,
-                    'separator' => 'before',
                     'content_classes' => 'e-add-icon-heading',
                     'condition' => [
                         'query_filter' => 'date',
@@ -955,7 +952,6 @@ class Query_Posts extends Base_Query {
                     'type' => Controls_Manager::RAW_HTML,
                     'show_label' => false,
                     'raw' => '<i class="fa fa-folder-o" aria-hidden="true"></i> ' . __(' Term Filters', 'e-addons'),
-                    'separator' => 'before',
                     'content_classes' => 'e-add-icon-heading',
                     'condition' => [
                         'query_filter' => 'term'
@@ -1142,7 +1138,6 @@ class Query_Posts extends Base_Query {
                     'type' => Controls_Manager::RAW_HTML,
                     'show_label' => false,
                     'raw' => '<i class="fa fa-user-circle-o" aria-hidden="true"></i> ' . __(' Author Filters', 'e-addons'),
-                    'separator' => 'before',
                     'content_classes' => 'e-add-icon-heading',
                     'condition' => [
                         'query_filter' => 'author'
@@ -1240,7 +1235,6 @@ class Query_Posts extends Base_Query {
                     'type' => Controls_Manager::RAW_HTML,
                     'show_label' => false,
                     'raw' => '<i class="fa fa-key" aria-hidden="true"></i> ' . __(' Metakey Filters', 'e-addons'),
-                    'separator' => 'before',
                     'content_classes' => 'e-add-icon-heading',
                     'condition' => [
                         'query_filter' => 'metakey'
@@ -1710,7 +1704,6 @@ class Query_Posts extends Base_Query {
             $terms_excluded = $settings['exclude_term'];
             $terms_excluded = Utils::explode($terms_excluded);
         }
-<<<<<<< HEAD
         //risolvo bug: quando il dato è una stringa o numero e non Array, quindi converto.
         if(!is_array($terms_included)){
             $terms_included = explode( ',', $terms_included );
@@ -1718,10 +1711,6 @@ class Query_Posts extends Base_Query {
         if(!is_array($terms_exclude)){
             $terms_exclude = explode( ',', $terms_exclude );
         }
-=======
-        //risolvo bug quando il dato è una stringa o numero e non Array, quindi converto.
-        $terms_included = Utils::explode( $terms_included );
->>>>>>> c91180391d03271f6a0adb4d58412e554537549c
         //var_dump($terms_included);
         
         //
