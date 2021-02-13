@@ -103,9 +103,20 @@ class Query_Posts extends Base_Query {
           item_label
           todo: commets...
          */
+        
+        
+        
+
+        // TABS ----------
+        $repeater->start_controls_tabs('items_repeater_tab');
+
+        $repeater->start_controls_tab('tab_content', [
+            'label' => __('Content', 'e-addons'),
+        ]);
+        
         $repeater->add_control(
                 'item_type', [
-            'label' => __('Item type', 'e-addons'),
+            'label' => __('Type', 'e-addons'),
             'type' => Controls_Manager::SELECT,
             'options' => [
                 'item_image' => __('Image', 'e-addons'),
@@ -124,18 +135,9 @@ class Query_Posts extends Base_Query {
                 ]
         );
         
-        
-
-        // TABS ----------
-        $repeater->start_controls_tabs('items_repeater_tab');
-
-        $repeater->start_controls_tab('tab_content', [
-            'label' => __('Content', 'e-addons'),
-        ]);
-        
         $repeater->add_control(
                 'item_text_label', [
-            'label' => __('Item Label', 'e-addons'),
+            'label' => __('Label', 'e-addons'),
             'type' => Controls_Manager::TEXT,
                 ]
         );
