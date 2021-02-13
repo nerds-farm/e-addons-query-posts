@@ -103,28 +103,28 @@ class Query_Posts extends Base_Query {
           item_label
           todo: commets...
          */
+                
         $repeater->add_control(
                 'item_type', [
-            'label' => __('Item type', 'e-addons'),
+            'label' => __('Item Type', 'e-addons'),
             'type' => Controls_Manager::SELECT,
             'options' => [
                 'item_image' => __('Image', 'e-addons'),
                 'item_title' => __('Title', 'e-addons'),
                 'item_date' => __('Date', 'e-addons'),
-                'item_termstaxonomy' => __('Terms of Taxonomy', 'e-addons'),
-                'item_content' => __('Content/Excerpt', 'e-addons'),
+                'item_termstaxonomy' => __('Terms', 'e-addons'),
+                'item_content' => __('Content', 'e-addons'),
+                'item_excerpt' => __('Excerpt', 'e-addons'),
                 'item_author' => __('Author', 'e-addons'),
                 'item_posttype' => __('Post Type', 'e-addons'),
-                'item_custommeta' => __('Custom Fields', 'e-addons'),
+                'item_custommeta' => __('Custom Field', 'e-addons'),
                 'item_readmore' => __('Read More', 'e-addons'),
-                'item_label' => __('Label', 'e-addons'),
+                'item_label' => __('Static', 'e-addons'),
                 'item_template' => __('Template', 'e-addons'),
             ],
             'default' => '',
                 ]
         );
-        
-        
 
         // TABS ----------
         $repeater->start_controls_tabs('items_repeater_tab');
@@ -134,8 +134,8 @@ class Query_Posts extends Base_Query {
         ]);
         
         $repeater->add_control(
-                'item_label', [
-            'label' => __('Item Label', 'e-addons'),
+                'item_text_label', [
+            'label' => __('Label', 'e-addons'),
             'type' => Controls_Manager::TEXT,
                 ]
         );
@@ -236,7 +236,7 @@ class Query_Posts extends Base_Query {
                     [
                         'name' => 'item_type',
                         'operator' => '!in',
-                        'value' => ['item_content', 'item_author', 'item_readmore', 'item_custommeta','item_template'],
+                        'value' => ['item_content', 'item_excerpt', 'item_author', 'item_readmore', 'item_custommeta','item_template'],
                     ],
                     [
                         'relation' => 'and',
@@ -294,7 +294,7 @@ class Query_Posts extends Base_Query {
                         ]
                     ],
                     //item_type.replace("item_", "")
-                    'title_field' => '<# var etichetta = item_type; etichetta = etichetta.replace("item_", ""); #><b class="e-add-item-name"><i class="fa {{{ item_type+"-ic" }}}" aria-hidden="true"></i> {{{ etichetta }}}</b>',
+                    'title_field' => '<# var etichetta = item_type; etichetta = etichetta.replace("item_", ""); #><b class="e-add-item-name"><i class="fa {{{ item_type+"-ic" }}}" aria-hidden="true"></i> {{{item_text_label}}} | {{{ etichetta }}}</b>',
                 ]
         );
 
@@ -1708,7 +1708,9 @@ class Query_Posts extends Base_Query {
         // l'esclusione vale in ogni caso, permette di mmodellare la query in caso di termini multipli
         if (!empty($settings['exclude_term'])) {
             $terms_excluded = $settings['exclude_term'];
+            $terms_excluded = Utils::explode($terms_excluded);
         }
+<<<<<<< HEAD
         //risolvo bug: quando il dato è una stringa o numero e non Array, quindi converto.
         if(!is_array($terms_included)){
             $terms_included = explode( ',', $terms_included );
@@ -1716,6 +1718,10 @@ class Query_Posts extends Base_Query {
         if(!is_array($terms_exclude)){
             $terms_exclude = explode( ',', $terms_exclude );
         }
+=======
+        //risolvo bug quando il dato è una stringa o numero e non Array, quindi converto.
+        $terms_included = Utils::explode( $terms_included );
+>>>>>>> c91180391d03271f6a0adb4d58412e554537549c
         //var_dump($terms_included);
         
         //
