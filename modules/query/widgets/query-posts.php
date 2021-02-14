@@ -1705,13 +1705,7 @@ class Query_Posts extends Base_Query {
             $terms_excluded = Utils::explode($terms_excluded);
         }
         //risolvo bug: quando il dato è una stringa o numero e non Array, quindi converto.
-        if(!is_array($terms_included)){
-            $terms_included = explode( ',', $terms_included );
-        }
-        if(!is_array($terms_exclude)){
-            $terms_exclude = explode( ',', $terms_exclude );
-        }
-        //var_dump($terms_included);
+        $terms_included = Utils::explode( $terms_included );        
         
         //
         $taxquery = array();
