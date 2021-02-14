@@ -60,14 +60,7 @@ class Query_Posts extends Base_Query {
         //$this->add_skin( new \EAddonsForElementor\Modules\Query\Skins\Gridfilters( $this ) );
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Timeline($this));
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Table($this));
-        /*
-          $this->add_skin( new \EAddonsQuery\Modules\Query\Skins\Gridtofullscreen3d( $this ) );
-          $this->add_skin( new \EAddonsQuery\Modules\Query\Skins\Crossroadsslideshow( $this ) );
-          $this->add_skin( new \EAddonsQuery\Modules\Query\Skins\Nextpost( $this ) );
-          $this->add_skin( new \EAddonsQuery\Modules\Query\Skins\Threed( $this ) );
-          $this->add_skin( new \EAddonsQuery\Modules\Query\Skins\Triggerscroll( $this ) );
-         */
-        // $this->add_skin( new Skins\Skin_Smoothscroll( $this ) );        
+           
     }
 
     protected function _register_controls() {
