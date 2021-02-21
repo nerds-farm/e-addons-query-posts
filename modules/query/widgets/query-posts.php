@@ -1762,7 +1762,7 @@ class Query_Posts extends Base_Query {
             $taxquery[] = $taxquery_inc;
         }
         
-        if (!empty($taxquery_exc) && !impty($settings['exclude_term_combination'])) {
+        if (!empty($taxquery_exc) && !empty($settings['exclude_term_combination'])) {
             $taxquery_exc['relation'] = $settings['exclude_term_combination'];
             $taxquery[] = $taxquery_exc;
         }
