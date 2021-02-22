@@ -5,11 +5,11 @@
  * @wordpress-plugin
  * Plugin Name:       e-addons QUERY POSTS
  * Plugin URI:        https://e-addons.com
- * Description:       The must have Elementor suite for Nerds
+ * Description:       Build lists of any Post type and for any need
  * Version:           1.0.1
  * Author:            Nerds Farm
  * Author URI:        https://nerds.farm
- * Text Domain:       e-addons-posts
+ * Text Domain:       e-addons-query-posts
  * Domain Path:       /languages
  * License:           GPL-3.0
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
