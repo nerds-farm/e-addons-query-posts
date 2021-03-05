@@ -239,7 +239,7 @@ class Query_Posts extends Base_Query {
                             [
                                 'name' => 'metafield_type',
                                 'operator' => 'in',
-                                'value' => ['text', 'image', 'file', 'array']
+                                'value' => ['text', 'number', 'image', 'file', 'array']
                             ]
                         ]
                     ]
