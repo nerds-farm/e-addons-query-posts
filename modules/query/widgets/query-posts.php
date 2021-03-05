@@ -327,27 +327,27 @@ class Query_Posts extends Base_Query {
             'label_block' => true,
             'options' => [
                 'automatic_mode' => [
-                    'title' => __('Automatic Mode', 'e-addons'),
+                    'title' => __('Automatic', 'e-addons'),
                     'return_val' => 'val',
                     'icon' => 'fa fa-cogs',
                 ],
                 'get_cpt' => [
-                    'title' => __('From Post Type', 'e-addons'),
+                    'title' => __('Post Type', 'e-addons'),
                     'return_val' => 'val',
                     'icon' => 'fas fa-thumbtack',
                 ],
                 'post_parent' => [
-                    'title' => __('From Post Parent', 'e-addons'),
+                    'title' => __('Post Parent', 'e-addons'),
                     'return_val' => 'val',
                     'icon' => 'fa fa-sitemap',
                 ],
                 'custommeta_source' => [
-                    'title' => __('Custommeta-Surce field', 'e-addons'),
+                    'title' => __('Custom Meta Field', 'e-addons'),
                     'return_val' => 'val',
                     'icon' => 'fas fa-check-double',
                 ],
                 'specific_posts' => [
-                    'title' => __('From Specific Posts', 'e-addons'),
+                    'title' => __('Specific Posts', 'e-addons'),
                     'return_val' => 'val',
                     'icon' => 'far fa-copy',
                 ],
@@ -1419,37 +1419,29 @@ class Query_Posts extends Base_Query {
                 $args['post_parent__in'] = $settings['specific_page_parent'];
                 break;
             case 'custommeta_source':
-                $custommeta_source_key = $settings['custommeta_source_key'];
-                //$custommeta_source_type = $settings['custommeta_source_type'];
-                if (empty($settings['custommeta_source_key'])) {
-                    return;
-                }
-                $type_of_location = Query_Utils::is_type_of();
-                $id_of_location = Query_Utils::is_id_of();
-                $custommeta_source_value = get_metadata($type_of_location, $id_of_location, $settings['custommeta_source_key'], true);
+                $custommeta_source_value = $this->get_custom_meta_source_value($settings);
                 if (!empty($custommeta_source_value)) {
                     // default args
                     $args['posts_per_page'] = -1;
                     $args['orderby'] = 'post__in';
                     $args['post_type'] = 'any';
-                    //
                     $args['post__in'] = $custommeta_source_value;
                 }
                 break;
             case 'specific_posts':
-                //
-                $repeater_specific_posts = $settings['repeater_specific_posts'];
-                $items_specific_posts = array();
-                foreach ($repeater_specific_posts as $item_sp) {
-                    array_push($items_specific_posts, $item_sp['the_post']);
-                }
-                if (count($items_specific_posts)) {
-                    // default args
-                    $args['posts_per_page'] = -1;
-                    $args['orderby'] = 'post__in';
-                    $args['post_type'] = 'any';
-                    //
-                    $args['post__in'] = $items_specific_posts;
+                if (!empty($settings['repeater_specific_posts'])) {
+                    $items_specific_posts = array();
+                    foreach ($settings['repeater_specific_posts'] as $item_sp) {
+                        if (!empty($item_sp['the_post'])) {
+                            array_push($items_specific_posts, $item_sp['the_post']);
+                        }
+                    }                
+                    if (count($items_specific_posts)) {
+                        $args['posts_per_page'] = -1;
+                        $args['orderby'] = 'post__in';
+                        $args['post_type'] = 'any';                        
+                        $args['post__in'] = $items_specific_posts;
+                    }
                 }
                 break;
             case 'custom_query':
