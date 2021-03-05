@@ -420,7 +420,7 @@ class Query_Posts extends Base_Query {
                 [
                     'type' => Controls_Manager::RAW_HTML,
                     'show_label' => false,
-                    'raw' => '<i class="fas fa-exclamation-circle"></i> ' . __('With this option will be used posts based on the current global Query. <div class="eadd-automatic-info">Ideal for native Archives pages: <ul><li>Templates in posts, pages or single cpt;</li> <li>Terms archives;</li> <li>Authors archives; </li></ul></div>', 'e-addons'),
+                    'raw' => '<i class="fas fa-exclamation-circle"></i> ' . __('With this option will be used current posts in the global Query. <div class="eadd-automatic-info">Ideal for native Archives pages: <ul><li>Templates in posts, pages or single cpt;</li> <li>Terms archives;</li> <li>Authors archives; </li></ul></div>', 'e-addons'),
                     'content_classes' => 'e-add-info-panel',
                     'condition' => [
                         'query_type' => 'automatic_mode',
@@ -440,8 +440,8 @@ class Query_Posts extends Base_Query {
         // I fratelli
         $this->add_control(
                 'dynamic_my_siblings', [
-            'label' => __('My Siblings', 'e-addons'),
-            'description' => __('I take the post parent and I get my siblings out of myself.', 'e-addons'),
+            'label' => __('Show Siblings', 'e-addons'),
+            'description' => __('Display current post Siblings (posts with same parent).', 'e-addons'),
             'type' => Controls_Manager::SWITCHER,
             'condition' => [
                 'query_type' => 'automatic_mode',
@@ -452,8 +452,8 @@ class Query_Posts extends Base_Query {
         // I figli
         $this->add_control(
                 'dynamic_my_children', [
-            'label' => __('My Children', 'e-addons'),
-            'description' => __('Compared to myself-I take my children.', 'e-addons'),
+            'label' => __('Show Children', 'e-addons'),
+            'description' => __('Display current post Children (if any).', 'e-addons'),
             'type' => Controls_Manager::SWITCHER,
             'condition' => [
                 'query_type' => 'automatic_mode',
@@ -499,6 +499,7 @@ class Query_Posts extends Base_Query {
                 'draft' => __('Draft', 'e-addons'),
                 'private' => __('Private', 'e-addons'),
                 'password' => __('Password', 'e-addons'),
+                'future' => __('Future', 'e-addons'),
             ],
             'multiple' => true,
             'label_block' => true,
@@ -817,27 +818,31 @@ class Query_Posts extends Base_Query {
                 'publish_date' => [
                     'title' => __('Publish Date', 'e-addons'),
                     'icon' => 'fa fa-calendar',
-                ],
-                /*
-                  'post_modified' => [
+                ],                
+                'post_modified' => [
                   'title' => __('Modified Date', 'e-addons'),
                   'icon' => 'fa fa-edit',
-                  ], */
-                'custom_meta' => [
+                ],
+                'comment_date' => [
+                  'title' => __('Comment Date', 'e-addons'),
+                  'icon' => 'fa fa-comment',
+                ],
+                
+                /*'custom_meta' => [
                     'title' => __('Post Meta', 'e-addons'),
                     'icon' => 'fa fa-square',
-                ],
+                ],*/
             ],
             'default' => 'publish_date',
             'toggle' => false,
             'condition' => [
                 'query_filter' => 'date',
-                'querydate_mode!' => ['', 'future'],
+                //'querydate_mode!' => ['', 'future'],
             ],
                 ]
         );
 
-        $this->add_control(
+        /*$this->add_control(
                 'querydate_field_meta',
                 [
                     'label' => __('Meta Field', 'e-addons'),
@@ -902,6 +907,9 @@ class Query_Posts extends Base_Query {
                     ]
                 ]
         );
+         * 
+         */
+        
         // number of days / months / years elapsed
         $this->add_control(
                 'querydate_range', [
@@ -1505,9 +1513,9 @@ class Query_Posts extends Base_Query {
         }
         
         // ignore_sticky_posts
-        if (!empty($settings['ignore_sticky_posts'])) {
-            $args['post__in'] = get_option('sticky_posts');
-            $args['ignore_sticky_posts'] = (bool)$settings['ignore_sticky_posts'];
+        $args['ignore_sticky_posts'] = (bool)$settings['ignore_sticky_posts'];
+        if (empty($settings['ignore_sticky_posts'])) {
+            $args['post__in'] = get_option('sticky_posts');            
         }
         
         /*
@@ -1793,11 +1801,11 @@ class Query_Posts extends Base_Query {
         $date_args = array();
         if ($settings['querydate_mode']) {
 
-            $querydate_field_meta_format = 'Y-m-d';
+            //$querydate_field_meta_format = 'Y-m-d';
             // get the field to compare
-            $date_field = $settings['querydate_field'];
+            //$date_field = $settings['querydate_field'];
 
-            switch ($settings['querydate_mode']) {
+            /*switch ($settings['querydate_mode']) {
                 case 'past':
                     if ($settings['querydate_field'] == 'custom_meta') {
                         $date_field = $settings['querydate_field_meta'];
@@ -1808,9 +1816,9 @@ class Query_Posts extends Base_Query {
                     $date_field = $settings['querydate_field_meta_future'];
                     $querydate_field_meta_format = $settings['querydate_field_meta_future_format'];
                     break;
-            }
+            }*/
 
-            if ($date_field) {
+            //if ($date_field) {
                 $date_after = $date_before = false;
                 switch ($settings['querydate_mode']) {
                     case 'past':
@@ -1840,16 +1848,15 @@ class Query_Posts extends Base_Query {
                         break;
                 }
                 //
-                if ($date_field == 'publish_date') {
+                //if ($date_field == 'publish_date') {
                     // compare by post publish date
                     $date_args['date_query'] = array(
-                        array(
+                            'column' => $settings['querydate_field'],
                             'after' => $date_after,
                             'before' => $date_before,
-                            'inclusive' => true,
-                        )
-                    );
-                } else {
+                            'inclusive' => true,                        
+                        );
+                /*} else {
                     // compare by post meta
                     if ($date_after)
                         $date_after = date($querydate_field_meta_format, strtotime($date_after));
@@ -1883,8 +1890,8 @@ class Query_Posts extends Base_Query {
                             )
                         );
                     }
-                }
-            }
+                }*/
+            
         }
         return $date_args;
     }
