@@ -60,7 +60,6 @@ class Query_Posts extends Base_Query {
         //$this->add_skin( new \EAddonsForElementor\Modules\Query\Skins\Gridfilters( $this ) );
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Timeline($this));
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Table($this));
-           
     }
 
     protected function _register_controls() {
@@ -96,7 +95,7 @@ class Query_Posts extends Base_Query {
           item_label
           todo: commets...
          */
-                
+
         $repeater->add_control(
                 'item_type', [
             'label' => __('Item Type', 'e-addons'),
@@ -115,7 +114,6 @@ class Query_Posts extends Base_Query {
                 'item_label' => __('Static', 'e-addons'),
                 'item_template' => __('Template', 'e-addons'),
             ],
-            'default' => '',
                 ]
         );
 
@@ -125,7 +123,7 @@ class Query_Posts extends Base_Query {
         $repeater->start_controls_tab('tab_content', [
             'label' => __('Content', 'e-addons'),
         ]);
-        
+
         $repeater->add_control(
                 'item_text_label', [
             'label' => __('Label', 'e-addons'),
@@ -160,7 +158,7 @@ class Query_Posts extends Base_Query {
 
         // +********************* Post Type
         $this->controls_items_posttype_content($repeater);
-        
+
         // +********************* Template
         $this->controls_items_template_content($repeater);
 
@@ -229,7 +227,7 @@ class Query_Posts extends Base_Query {
                     [
                         'name' => 'item_type',
                         'operator' => '!in',
-                        'value' => ['item_content', 'item_excerpt', 'item_author', 'item_readmore', 'item_custommeta','item_template'],
+                        'value' => ['item_content', 'item_excerpt', 'item_author', 'item_readmore', 'item_custommeta', 'item_template'],
                     ],
                     [
                         'relation' => 'and',
@@ -311,10 +309,10 @@ class Query_Posts extends Base_Query {
           'satic_list'
          */
         $this->add_control(
-            'query_debug', [
-                'label' => '<span style="color: #fff; background-color: #93003c; padding: 5px 10px; border-radius: 20px;">'.__('Show query for DEBUG', 'e-addons').'</span>',
-                'type' => Controls_Manager::SWITCHER,
-            ]
+                'query_debug', [
+            'label' => '<span style="color: #fff; background-color: #93003c; padding: 5px 10px; border-radius: 20px;">' . __('Show query for DEBUG', 'e-addons') . '</span>',
+            'type' => Controls_Manager::SWITCHER,
+                ]
         );
         $this->add_control(
                 'query_type', [
@@ -753,7 +751,6 @@ class Query_Posts extends Base_Query {
             'label' => __('Serch Value', 'elementor'),
             'type' => Controls_Manager::TEXT,
             'label_block' => true,
-            'default' => '',
             'condition' => [
                 'query_filter' => 'search'
             ]
@@ -789,7 +786,6 @@ class Query_Posts extends Base_Query {
                 'querydate_mode', [
             'label' => __('Date Filter', 'e-addons'),
             'type' => Controls_Manager::SELECT,
-            'default' => '',
             'label_block' => true,
             'options' => [
                 '' => __('No Filter', 'e-addons'),
@@ -818,98 +814,29 @@ class Query_Posts extends Base_Query {
                 'publish_date' => [
                     'title' => __('Publish Date', 'e-addons'),
                     'icon' => 'fa fa-calendar',
-                ],                
+                ],
                 'post_modified' => [
-                  'title' => __('Modified Date', 'e-addons'),
-                  'icon' => 'fa fa-edit',
+                    'title' => __('Modified Date', 'e-addons'),
+                    'icon' => 'fa fa-edit',
                 ],
                 'comment_date' => [
-                  'title' => __('Comment Date', 'e-addons'),
-                  'icon' => 'fa fa-comment',
+                    'title' => __('Comment Date', 'e-addons'),
+                    'icon' => 'fa fa-comment',
                 ],
-                
-                /*'custom_meta' => [
-                    'title' => __('Post Meta', 'e-addons'),
-                    'icon' => 'fa fa-square',
-                ],*/
+            /* 'custom_meta' => [
+              'title' => __('Post Meta', 'e-addons'),
+              'icon' => 'fa fa-square',
+              ], */
             ],
             'default' => 'publish_date',
             'toggle' => false,
             'condition' => [
                 'query_filter' => 'date',
-                //'querydate_mode!' => ['', 'future'],
+            //'querydate_mode!' => ['', 'future'],
             ],
                 ]
         );
 
-        /*$this->add_control(
-                'querydate_field_meta',
-                [
-                    'label' => __('Meta Field', 'e-addons'),
-                    'type' => 'e-query',
-                    'placeholder' => __('Meta key or Name', 'e-addons'),
-                    'label_block' => true,
-                    'query_type' => 'metas',
-                    'object_type' => 'post',
-                    'description' => __('Selected Post Meta value must be stored if format "Ymd", like ACF Date', 'e-addons'),
-                    'separator' => 'before',
-                    'condition' => [
-                        'query_filter' => 'date',
-                        'querydate_mode!' => '',
-                        'querydate_mode!' => 'future',
-                        'querydate_field' => 'custom_meta'
-                    ]
-                ]
-        );
-        $this->add_control(
-                'querydate_field_meta_format',
-                [
-                    'label' => __('Meta Date Format', 'e-addons'),
-                    'type' => Controls_Manager::TEXT,
-                    'placeholder' => __('Y-m-d', 'e-addons'),
-                    'label_block' => true,
-                    'default' => __('Ymd', 'e-addons'),
-                    'condition' => [
-                        'query_filter' => 'date',
-                        'querydate_mode' => 'past',
-                        'querydate_field' => 'custom_meta'
-                    ]
-                ]
-        );
-
-        $this->add_control(
-                'querydate_field_meta_future',
-                [
-                    'label' => __('Meta Field', 'e-addons'),
-                    'type' => 'e-query',
-                    'placeholder' => __('Meta key or Name', 'e-addons'),
-                    'label_block' => true,
-                    'query_type' => 'metas',
-                    'object_type' => 'post',
-                    'description' => __('Selected Post Meta value must be stored if format "Ymd", like ACF Date', 'e-addons'),
-                    'separator' => 'before',
-                    'condition' => [
-                        'query_filter' => 'date',
-                        'querydate_mode' => 'future',
-                    ]
-                ]
-        );
-        $this->add_control(
-                'querydate_field_meta_future_format',
-                [
-                    'label' => __('Meta Date Format', 'e-addons'),
-                    'type' => Controls_Manager::TEXT,
-                    'placeholder' => __('Y-m-d, U, Ymd', 'e-addons'),
-                    'label_block' => false,
-                    'condition' => [
-                        'query_filter' => 'date',
-                        'querydate_mode' => 'future',
-                    ]
-                ]
-        );
-         * 
-         */
-        
         // number of days / months / years elapsed
         $this->add_control(
                 'querydate_range', [
@@ -1059,11 +986,11 @@ class Query_Posts extends Base_Query {
                                 'name' => 'include_term',
                                 'operator' => '!=',
                                 'value' => [],
-                            ]/*,
-                            [
-                                'name' => 'term_from',
-                                'value' => 'post_term',
-                            ],*/
+                            ]/* ,
+                          [
+                          'name' => 'term_from',
+                          'value' => 'post_term',
+                          ], */
                         ]
                     ]
                 ]
@@ -1080,7 +1007,7 @@ class Query_Posts extends Base_Query {
                     'multiple' => true,
                     'condition' => [
                         'query_filter' => 'term',
-                        //'term_from' => 'post_term'
+                    //'term_from' => 'post_term'
                     ],
                 ]
         );
@@ -1122,11 +1049,11 @@ class Query_Posts extends Base_Query {
                                 'name' => 'exclude_term',
                                 'operator' => '!=',
                                 'value' => [],
-                            ]/*,
-                            [
-                                'name' => 'term_from',
-                                'value' => 'post_term',
-                            ],*/
+                            ]/* ,
+                          [
+                          'name' => 'term_from',
+                          'value' => 'post_term',
+                          ], */
                         ]
                     ]
                 ]
@@ -1349,7 +1276,7 @@ class Query_Posts extends Base_Query {
                 ]
         );
         $this->end_controls_section();
-        
+
         $this->add_no_result_section();
     }
 
@@ -1364,12 +1291,14 @@ class Query_Posts extends Base_Query {
 
         /*
           -------- COMMENTS -------
-        */
+         */
 
         // DEBUG
         if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
-            if(!empty($this->get_settings_for_display('query_debug'))){
-                echo '<pre>'; var_dump($args); echo '</pre>';
+            if (!empty($this->get_settings_for_display('query_debug'))) {
+                echo '<pre>';
+                var_dump($args);
+                echo '</pre>';
             }
         }
         $query = new \WP_Query($args);
@@ -1383,7 +1312,7 @@ class Query_Posts extends Base_Query {
         $settings = $this->get_settings_for_display();
         if (empty($settings))
             return;
-        
+
         $args = array();
         /*
           '1 - automatic_mode'
@@ -1443,11 +1372,11 @@ class Query_Posts extends Base_Query {
                         if (!empty($item_sp['the_post'])) {
                             array_push($items_specific_posts, $item_sp['the_post']);
                         }
-                    }                
+                    }
                     if (count($items_specific_posts)) {
                         $args['posts_per_page'] = -1;
                         $args['orderby'] = 'post__in';
-                        $args['post_type'] = 'any';                        
+                        $args['post_type'] = 'any';
                         $args['post__in'] = $items_specific_posts;
                     }
                 }
@@ -1507,17 +1436,18 @@ class Query_Posts extends Base_Query {
         if (!empty($settings['exclude_myself'])) {
             array_push($excludedPosts, get_the_ID());
         }
-        
-        if ( !empty($excludedPosts) ) {
+
+        if (!empty($excludedPosts)) {
             $args['post__not_in'] = $excludedPosts;
         }
-        
+
         // ignore_sticky_posts
-        $args['ignore_sticky_posts'] = (bool)$settings['ignore_sticky_posts'];
-        if (empty($settings['ignore_sticky_posts'])) {
-            $args['post__in'] = get_option('sticky_posts');            
-        }
         
+        if (!empty($settings['ignore_sticky_posts'])) {
+            $args['ignore_sticky_posts'] = true;
+            //$args['post__in'] = get_option('sticky_posts');
+        }
+
         /*
           'query_filter'
           'date'
@@ -1689,7 +1619,7 @@ class Query_Posts extends Base_Query {
                         array_push($terms_included, $term->term_id);
                     }
                 }
-                
+
                 break;
         }
         // l'esclusione vale in ogni caso, permette di mmodellare la query in caso di termini multipli
@@ -1698,8 +1628,8 @@ class Query_Posts extends Base_Query {
             $terms_excluded = Utils::explode($terms_excluded);
         }
         //risolvo bug: quando il dato è una stringa o numero e non Array, quindi converto.
-        $terms_included = Utils::explode( $terms_included );        
-        
+        $terms_included = Utils::explode($terms_included);
+
         //
         $taxquery = array();
         $taxquery_inc = array();
@@ -1714,7 +1644,7 @@ class Query_Posts extends Base_Query {
             $taxterms = get_terms(array(
                 'taxonomy' => $tax,
                 'hide_empty' => false,
-                    ));
+            ));
             // 2 - li confronto con quelli selezionati e ne ricavo solo quelli di qusta taxonomy
             foreach ($taxterms as $term) {
 
@@ -1755,12 +1685,12 @@ class Query_Posts extends Base_Query {
             $taxquery_inc['relation'] = $settings['include_term_combination'];
             $taxquery[] = $taxquery_inc;
         }
-        
+
         if (!empty($taxquery_exc) && !empty($settings['exclude_term_combination'])) {
             $taxquery_exc['relation'] = $settings['exclude_term_combination'];
             $taxquery[] = $taxquery_exc;
         }
-        
+
         if (!empty($taxquery)) {
             $taxquery['relation'] = 'AND';
             $terms_args['tax_query'] = $taxquery;
@@ -1771,127 +1701,42 @@ class Query_Posts extends Base_Query {
     }
 
     protected function get_date_filter($settings) {
-        /*
-          -------- DATE -------
-          'querydate_mode'
-          ''
-          'past'
-          'querydate_field_meta_format'
-          'future'
-          'querydate_field_meta_future'
-          'querydate_field_meta_future_format'
-          'today'
-
-          'yesterday'
-
-          'days'
-          'weeks'
-          'months'
-          'years'
-          'querydate_range'
-          'period'
-          'querydate_date_type'
-          'querydate_date_to'
-
-          'querydate_field'
-          'publish_date'
-          //'post_modified'
-          'custom_meta'
-         */
         $date_args = array();
         if ($settings['querydate_mode']) {
-
-            //$querydate_field_meta_format = 'Y-m-d';
-            // get the field to compare
-            //$date_field = $settings['querydate_field'];
-
-            /*switch ($settings['querydate_mode']) {
+            $date_after = $date_before = false;
+            switch ($settings['querydate_mode']) {
                 case 'past':
-                    if ($settings['querydate_field'] == 'custom_meta') {
-                        $date_field = $settings['querydate_field_meta'];
-                        $querydate_field_meta_format = $settings['querydate_field_meta_format'];
-                    }
+                    $date_before = date('Y-m-d H:i:s');
                     break;
                 case 'future':
-                    $date_field = $settings['querydate_field_meta_future'];
-                    $querydate_field_meta_format = $settings['querydate_field_meta_future_format'];
+                    $date_after = date('Y-m-d H:i:s');
                     break;
-            }*/
-
-            //if ($date_field) {
-                $date_after = $date_before = false;
-                switch ($settings['querydate_mode']) {
-                    case 'past':
-                        $date_before = date('Y-m-d H:i:s');
-                        break;
-                    case 'future':
-                        $date_after = date('Y-m-d H:i:s');
-                        break;
-                    case 'today':
-                        $date_after = date('Y-m-d 00:00:00');
-                        $date_before = date('Y-m-d 23:23:59');
-                        break;
-                    case 'yesterday':
-                        $date_after = date('Y-m-d 00:00:00', strtotime('-1 day'));
-                        $date_before = date('Y-m-d 23:23:59', strtotime('-1 day'));
-                        break;
-                    case 'days':
-                    case 'weeks':
-                    case 'months':
-                    case 'years':
-                        $date_after = '-' . $settings['querydate_range'] . ' ' . $settings['querydate_mode'];
-                        $date_before = 'now';
-                        break;
-                    case 'period':
-                        $date_after = $settings['querydate_date_from'];
-                        $date_before = $settings['querydate_date_to'];
-                        break;
-                }
-                //
-                //if ($date_field == 'publish_date') {
-                    // compare by post publish date
-                    $date_args['date_query'] = array(
-                            'column' => $settings['querydate_field'],
-                            'after' => $date_after,
-                            'before' => $date_before,
-                            'inclusive' => true,                        
-                        );
-                /*} else {
-                    // compare by post meta
-                    if ($date_after)
-                        $date_after = date($querydate_field_meta_format, strtotime($date_after));
-                    if ($date_before)
-                        $date_before = date($querydate_field_meta_format, strtotime($date_before));
-                    if ($date_before && $date_after) {
-                        $date_args['meta_query'] = array(
-                            array(
-                                'key' => $date_field,
-                                'value' => array($date_after, $date_before),
-                                'meta_type' => 'DATETIME',
-                                'compare' => 'BETWEEN'
-                            )
-                        );
-                    } else if ($date_after) {
-                        $date_args['meta_query'] = array(
-                            array(
-                                'key' => $date_field,
-                                'value' => $date_after,
-                                'meta_type' => 'DATETIME',
-                                'compare' => '>='
-                            )
-                        );
-                    } else {
-                        $date_args['meta_query'] = array(
-                            array(
-                                'key' => $date_field,
-                                'value' => $date_before,
-                                'meta_type' => 'DATETIME',
-                                'compare' => '<='
-                            )
-                        );
-                    }
-                }*/
-            
+                case 'today':
+                    $date_after = date('Y-m-d 00:00:00');
+                    $date_before = date('Y-m-d 23:23:59');
+                    break;
+                case 'yesterday':
+                    $date_after = date('Y-m-d 00:00:00', strtotime('-1 day'));
+                    $date_before = date('Y-m-d 23:23:59', strtotime('-1 day'));
+                    break;
+                case 'days':
+                case 'weeks':
+                case 'months':
+                case 'years':
+                    $date_after = '-' . $settings['querydate_range'] . ' ' . $settings['querydate_mode'];
+                    $date_before = 'now';
+                    break;
+                case 'period':
+                    $date_after = $settings['querydate_date_from'];
+                    $date_before = $settings['querydate_date_to'];
+                    break;
+            }
+            $date_args['date_query'] = array(
+                'column' => $settings['querydate_field'],
+                'after' => $date_after,
+                'before' => $date_before,
+                'inclusive' => true,
+            );
         }
         return $date_args;
     }
