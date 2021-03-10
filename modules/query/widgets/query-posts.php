@@ -60,7 +60,7 @@ class Query_Posts extends Base_Query {
         //$this->add_skin( new \EAddonsForElementor\Modules\Query\Skins\Gridfilters( $this ) );
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Timeline($this));
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Table($this));
-        //$this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Simple_List($this));
+        $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Simple_List($this));
     }
 
     protected function _register_controls() {
