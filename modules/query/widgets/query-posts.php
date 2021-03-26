@@ -911,6 +911,24 @@ class Query_Posts extends Base_Query {
             ],
                 ]
         );
+        
+        $this->add_control(
+                'current_term_taxonomy',
+                [
+                    'label' => __('<b>Include</b> Taxonomies', 'e-addons'),
+                    'type' => 'e-query',
+                    'placeholder' => __('Meta key or Name', 'e-addons'),
+                    'label_block' => true,
+                    'query_type' => 'taxonomy',
+                    'multiple' => true,
+                    'description' => __('Include Current Terms only of this specific Taxonomies', 'e-addons'),
+                    'condition' => [
+                        'term_from' => 'current_term',
+                        'query_filter' => 'term'
+                    ]
+                ]
+        );
+        
         // [Post Meta]
         $this->add_control(
                 'term_field_meta',
@@ -1619,7 +1637,11 @@ class Query_Posts extends Base_Query {
                 break;
             case 'current_term':
                 //$settings['include_term_combination'] = 'OR';
-                $taxonomies_from_post = get_object_taxonomies($post);
+                if (empty($settings['current_term_taxonomy'])) {
+                    $taxonomies_from_post = get_object_taxonomies($post);
+                } else {
+                    $taxonomies_from_post = $settings['current_term_taxonomy'];
+                }
                 foreach ($taxonomies_from_post as $tax) {
                     $currentpost_terms = get_the_terms(get_the_ID(), $tax);
                     if (!empty($currentpost_terms)) {
