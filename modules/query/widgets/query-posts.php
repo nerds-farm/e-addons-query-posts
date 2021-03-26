@@ -399,7 +399,7 @@ class Query_Posts extends Base_Query {
             'default' => [
             ],
             'separator' => 'after',
-            'fields' => array_values($repeater_specific_posts->get_controls()),
+            'fields' => $repeater_specific_posts->get_controls(),
             'title_field' => 'ID: {{{ the_post }}}',
             'condition' => [
                 'query_type' => 'specific_posts',
