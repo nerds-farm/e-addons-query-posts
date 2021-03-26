@@ -919,7 +919,7 @@ class Query_Posts extends Base_Query {
                     'type' => 'e-query',
                     'placeholder' => __('Meta key or Name', 'e-addons'),
                     'label_block' => true,
-                    'query_type' => 'taxonomy',
+                    'query_type' => 'taxonomies',
                     'multiple' => true,
                     'description' => __('Include Current Terms only of this specific Taxonomies', 'e-addons'),
                     'condition' => [

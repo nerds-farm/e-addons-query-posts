@@ -15,6 +15,10 @@ Create a custom Post query, choose the main layout skin, set the visibility, ord
 
 == Changelog ==
 
+= 1.1 =
+* Add: Current Post Terms filter for specific Taxonomy
+* Fix: Repeater js error in Editor
+
 = 1.0.2 =
 * Add: Future status
 * Add: Custom Field type Number
