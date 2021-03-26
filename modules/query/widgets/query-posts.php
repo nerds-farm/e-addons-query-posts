@@ -292,7 +292,6 @@ class Query_Posts extends Base_Query {
 
         $this->end_controls_section();
 
-
         //@p il TAB Query
         // ------------------------------------------------------------------ [SECTION - QUERY POSTS]
         $this->start_controls_section(
@@ -355,7 +354,6 @@ class Query_Posts extends Base_Query {
                 ]
         );
 
-
         // --------------------------------- [ Post Parent ]
         /*
           'specific_page_parent'
@@ -377,7 +375,6 @@ class Query_Posts extends Base_Query {
                     ],
                 ]
         );
-
 
         // --------------------------------- [ Specific Posts-Pages ] 
         $repeater_specific_posts = new Repeater();
@@ -607,7 +604,7 @@ class Query_Posts extends Base_Query {
                 'exclude_myself', [
             'label' => __('Exclude Current Post', 'e-addons'),
             'type' => Controls_Manager::SWITCHER,
-            'default' => 'yes',
+            //'default' => 'yes',
             'condition' => [
                 'query_type' => ['get_cpt']
             ]
@@ -966,7 +963,7 @@ class Query_Posts extends Base_Query {
                     ],
                     'toggle' => false,
                     'default' => 'OR',
-                    'conditions' => [
+                    /*'conditions' => [
                         'terms' => [
                             [
                                 'name' => 'query_filter',
@@ -987,13 +984,13 @@ class Query_Posts extends Base_Query {
                                 'name' => 'include_term',
                                 'operator' => '!=',
                                 'value' => [],
-                            ]/* ,
+                            ],
                           [
                           'name' => 'term_from',
                           'value' => 'post_term',
-                          ], */
+                          ],
                         ]
-                    ]
+                    ]*/
                 ]
         );
         $this->add_control(
@@ -1281,6 +1278,10 @@ class Query_Posts extends Base_Query {
         $this->add_no_result_section();
     }
 
+    public function query_posts() {
+        $this->query_the_elements();
+    }
+
     // La QUERY
     public function query_the_elements() {
 
@@ -1443,7 +1444,7 @@ class Query_Posts extends Base_Query {
         }
 
         // ignore_sticky_posts
-        
+
         if (!empty($settings['ignore_sticky_posts'])) {
             $args['ignore_sticky_posts'] = true;
             //$args['post__in'] = get_option('sticky_posts');
@@ -1595,12 +1596,15 @@ class Query_Posts extends Base_Query {
           'current_term'
          */
         $terms_args = array();
-
+        $post = get_post();
         $post_type = $settings['post_type'] ? $settings['post_type'] : 'post';
         $taxonomies_from_type = get_object_taxonomies($post_type);
 
         $terms_included = array();
         $terms_excluded = array();
+        $taxquery = array();
+        $taxquery_inc = array();
+        $taxquery_exc = array();
 
         switch ($settings['term_from']) {
             case 'post_term':
@@ -1614,72 +1618,70 @@ class Query_Posts extends Base_Query {
                 }
                 break;
             case 'current_term':
-                foreach ($taxonomies_from_type as $tax) {
+                //$settings['include_term_combination'] = 'OR';
+                $taxonomies_from_post = get_object_taxonomies($post);
+                foreach ($taxonomies_from_post as $tax) {
                     $currentpost_terms = get_the_terms(get_the_ID(), $tax);
-                    foreach ($currentpost_terms as $term) {
-                        array_push($terms_included, $term->term_id);
+                    if (!empty($currentpost_terms)) {
+                        $terms_included = array();
+                        foreach ($currentpost_terms as $term) {
+                            array_push($terms_included, $term->term_id);
+                        }
+                        $terms_included = Utils::explode($terms_included);
+                        array_push($taxquery_inc, array(
+                            'taxonomy' => $tax,
+                            //'field' => 'term_id',
+                            'terms' => $terms_included,
+                        ));
                     }
                 }
-
                 break;
         }
+        //var_dump($taxquery_inc);
         // l'esclusione vale in ogni caso, permette di mmodellare la query in caso di termini multipli
         if (!empty($settings['exclude_term'])) {
             $terms_excluded = $settings['exclude_term'];
             $terms_excluded = Utils::explode($terms_excluded);
         }
-        //risolvo bug: quando il dato è una stringa o numero e non Array, quindi converto.
         $terms_included = Utils::explode($terms_included);
-
-        //
-        $taxquery = array();
-        $taxquery_inc = array();
-        $taxquery_exc = array();
+        //risolvo bug: quando il dato è una stringa o numero e non Array, quindi converto.
         //var_dump($taxonomies_from_type);
-        foreach ($taxonomies_from_type as $tax) {
 
-            // 0 - questi sono i termini solo di questa $tax (array di IDs)
-            $filtered_terms_included = array();
-            $filtered_terms_excluded = array();
-            // 1 - leggo tutti i termini di questa taxonomy
-            $taxterms = get_terms(array(
-                'taxonomy' => $tax,
-                'hide_empty' => false,
-            ));
-            // 2 - li confronto con quelli selezionati e ne ricavo solo quelli di qusta taxonomy
-            foreach ($taxterms as $term) {
+        if ((!empty($terms_included) && empty($taxquery_inc)) || !empty($terms_excluded)) {
+            foreach ($taxonomies_from_type as $tax) {
 
-                if (!empty($terms_included))
-                    if (in_array($term->term_id, $terms_included)) {
-                        array_push($filtered_terms_included, $term->term_id);
+                // 1 - leggo tutti i termini di questa taxonomy
+                $taxterms = get_terms(array(
+                    'taxonomy' => $tax,
+                    'hide_empty' => false,
+                ));
+                // 2 - li confronto con quelli selezionati e ne ricavo solo quelli di qusta taxonomy
+                foreach ($taxterms as $term) {
+
+                    if ($settings['term_from'] != 'current_term') {
+                        if (!empty($terms_included))
+                            if (in_array($term->term_id, $terms_included)) {
+                                array_push($taxquery_inc, array(
+                                    'taxonomy' => $tax,
+                                    //'field' => 'term_id',
+                                    'terms' => $term->term_id,
+                                ));
+                            }
                     }
 
-                if (!empty($terms_excluded))
-                    if (in_array($term->term_id, $terms_excluded)) {
-                        array_push($filtered_terms_excluded, $term->term_id);
-                    }
-            }
-            // +++++++++++++++++++++
-            if (count($filtered_terms_included)) {
-                foreach ($filtered_terms_included as $fti) {
-                    array_push($taxquery_inc, array(
-                        'taxonomy' => $tax,
-                        'field' => 'term_id',
-                        'terms' => $fti,
-                    ));
+                    if (!empty($terms_excluded))
+                        if (in_array($term->term_id, $terms_excluded)) {
+                            array_push($taxquery_exc, array(
+                                'taxonomy' => $tax,
+                                //'field' => 'term_id',
+                                'terms' => $term->term_id,
+                                'operator' => 'NOT IN'
+                            ));
+                        }
                 }
+                // +++++++++++++++++++++
+                //var_dump($filtred_terms);
             }
-            if (count($filtered_terms_excluded)) {
-                foreach ($filtered_terms_excluded as $fte) {
-                    array_push($taxquery_exc, array(
-                        'taxonomy' => $tax,
-                        'field' => 'term_id',
-                        'terms' => $fte,
-                        'operator' => 'NOT IN'
-                    ));
-                }
-            }
-            //var_dump($filtred_terms);
         }
 
         if (!empty($taxquery_inc) && !empty($settings['include_term_combination'])) {
