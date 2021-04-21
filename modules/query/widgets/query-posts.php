@@ -228,7 +228,7 @@ class Query_Posts extends Base_Query {
                     [
                         'name' => 'item_type',
                         'operator' => '!in',
-                        'value' => ['item_content', 'item_excerpt', 'item_author', /*'item_readmore',*/ 'item_custommeta', 'item_template'],
+                        'value' => ['item_content', 'item_excerpt', 'item_author', /* 'item_readmore', */ 'item_custommeta', 'item_template'],
                     ],
                     [
                         'relation' => 'and',
@@ -911,7 +911,7 @@ class Query_Posts extends Base_Query {
             ],
                 ]
         );
-        
+
         $this->add_control(
                 'current_term_taxonomy',
                 [
@@ -928,7 +928,7 @@ class Query_Posts extends Base_Query {
                     ]
                 ]
         );
-        
+
         // [Post Meta]
         $this->add_control(
                 'term_field_meta',
@@ -981,34 +981,34 @@ class Query_Posts extends Base_Query {
                     ],
                     'toggle' => false,
                     'default' => 'OR',
-                    /*'conditions' => [
-                        'terms' => [
-                            [
-                                'name' => 'query_filter',
-                                'operator' => 'contains',
-                                'value' => 'term',
-                            ],
-                            [
-                                'name' => 'query_filter',
-                                'operator' => '!=',
-                                'value' => [],
-                            ],
-                            [
-                                'name' => 'include_term',
-                                'operator' => '!=',
-                                'value' => '',
-                            ],
-                            [
-                                'name' => 'include_term',
-                                'operator' => '!=',
-                                'value' => [],
-                            ],
-                          [
-                          'name' => 'term_from',
-                          'value' => 'post_term',
-                          ],
-                        ]
-                    ]*/
+                /* 'conditions' => [
+                  'terms' => [
+                  [
+                  'name' => 'query_filter',
+                  'operator' => 'contains',
+                  'value' => 'term',
+                  ],
+                  [
+                  'name' => 'query_filter',
+                  'operator' => '!=',
+                  'value' => [],
+                  ],
+                  [
+                  'name' => 'include_term',
+                  'operator' => '!=',
+                  'value' => '',
+                  ],
+                  [
+                  'name' => 'include_term',
+                  'operator' => '!=',
+                  'value' => [],
+                  ],
+                  [
+                  'name' => 'term_from',
+                  'value' => 'post_term',
+                  ],
+                  ]
+                  ] */
                 ]
         );
         $this->add_control(
@@ -1376,13 +1376,34 @@ class Query_Posts extends Base_Query {
                 $args['post_parent__in'] = $settings['specific_page_parent'];
                 break;
             case 'custommeta_source':
-                $custommeta_source_value = $this->get_custom_meta_source_value($settings);
-                if (!empty($custommeta_source_value)) {
-                    // default args
-                    $args['posts_per_page'] = -1;
-                    $args['orderby'] = 'post__in';
-                    $args['post_type'] = 'any';
-                    $args['post__in'] = $custommeta_source_value;
+
+                // default args
+                $args['posts_per_page'] = -1;
+                $args['orderby'] = 'post__in';
+                $args['post_type'] = 'any';
+                if (!empty($settings['custommeta_source_reverse']) && !empty($settings['custommeta_source_key_post'])) {
+                    $post_id = $settings['custommeta_source_post'] ? $settings['custommeta_source_post'] : get_the_ID();
+                    $args['meta_query'] = array(
+                        array(
+                            // ACF
+                            'key' => $settings['custommeta_source_key_post'],
+                            'value' => '"' . $post_id . '"',
+                            'compare' => 'LIKE',
+                        ),
+                        array(
+                            // PODS
+                            'key' => $settings['custommeta_source_key_post'],
+                            'value' => $post_id,
+                        ),
+                        'relation' => 'OR',
+                    );
+                } else {
+                    $custommeta_source_value = $this->get_custom_meta_source_value($settings);
+                    if (!empty($custommeta_source_value)) {
+                        $args['post__in'] = $custommeta_source_value;
+                    } else {
+                        $args['post__in'] = -1;
+                    }
                 }
                 break;
             case 'specific_posts':
@@ -1637,24 +1658,34 @@ class Query_Posts extends Base_Query {
                 break;
             case 'current_term':
                 //$settings['include_term_combination'] = 'OR';
-                if (empty($settings['current_term_taxonomy'])) {
-                    $taxonomies_from_post = get_object_taxonomies($post);
+                if (is_tax() || is_category() || is_tag()) {
+                    // taxonomy archive page
+                    $term = get_queried_object();
+                    array_push($taxquery_inc, array(
+                        'taxonomy' => $term->taxonomy,
+                        'terms' => $term->term_id,
+                    ));
                 } else {
-                    $taxonomies_from_post = $settings['current_term_taxonomy'];
-                }
-                foreach ($taxonomies_from_post as $tax) {
-                    $currentpost_terms = get_the_terms(get_the_ID(), $tax);
-                    if (!empty($currentpost_terms)) {
-                        $terms_included = array();
-                        foreach ($currentpost_terms as $term) {
-                            array_push($terms_included, $term->term_id);
+                    // singular post
+                    if (empty($settings['current_term_taxonomy'])) {
+                        $taxonomies_from_post = get_object_taxonomies($post);
+                    } else {
+                        $taxonomies_from_post = $settings['current_term_taxonomy'];
+                    }
+                    foreach ($taxonomies_from_post as $tax) {
+                        $currentpost_terms = get_the_terms(get_the_ID(), $tax);
+                        if (!empty($currentpost_terms)) {
+                            $terms_included = array();
+                            foreach ($currentpost_terms as $term) {
+                                array_push($terms_included, $term->term_id);
+                            }
+                            $terms_included = Utils::explode($terms_included);
+                            array_push($taxquery_inc, array(
+                                'taxonomy' => $tax,
+                                //'field' => 'term_id',
+                                'terms' => $terms_included,
+                            ));
                         }
-                        $terms_included = Utils::explode($terms_included);
-                        array_push($taxquery_inc, array(
-                            'taxonomy' => $tax,
-                            //'field' => 'term_id',
-                            'terms' => $terms_included,
-                        ));
                     }
                 }
                 break;

@@ -4,7 +4,7 @@ Donate link: https://e-addons.com/
 Tags: loop, query, archive, template, posts, skins, filter
 Requires at least: 4.7
 Tested up to: 5.6.2
-Stable tag: 1.1.1
+Stable tag: 1.2
 Requires PHP: 7.1
 
 Build lists of any Post type and for any need
@@ -14,6 +14,11 @@ Build lists of any Post type and for any need
 Create a custom Post query, choose the main layout skin, set the visibility, order and style of any element to get thousands of different solutions.
 
 == Changelog ==
+
+= 1.2 =
+* Add: Custom Meta Field Reverse
+* Add: Excerpt limit
+* Fix: Filter by Same Term in Term Archive
 
 = 1.1.1 =
 * Add: ReadMore advanced Link
