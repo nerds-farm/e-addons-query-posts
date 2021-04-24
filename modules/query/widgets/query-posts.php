@@ -125,14 +125,11 @@ class Query_Posts extends Base_Query {
             'label' => __('Content', 'e-addons'),
         ]);
 
-        $repeater->add_control(
-                'item_text_label', [
-            'label' => __('Label', 'e-addons'),
-            'type' => Controls_Manager::TEXT,
-                ]
-        );
-
         // CONTENT - TAB
+        
+        // +********************* Common
+        $this->controls_items_common_content($repeater);
+        
         // +********************* Label
         $this->controls_items_label_content($repeater);
 
@@ -187,7 +184,7 @@ class Query_Posts extends Base_Query {
         // +********************* CustoFields (ACF, Pods, Toolset, Metabox)
         // --------------- BASE
         //@p le caratteristiche grafiche base:
-        //  - text-align, flex-align, typography, space 
+        //  - text-align, flex-align, typography, space
         $this->controls_items_base_style($repeater);
 
         // --------------- AUTHOR BOX
@@ -216,7 +213,7 @@ class Query_Posts extends Base_Query {
 
         // ------------ BORDERS & SHADOW
         //@p le carateristiche grafche: bordo, raggio-del-bordo, ombra del box
-        $this->controls_items_bordersandshadow_style($repeater);
+        $this->controls_items_bordersandshadow_style($repeater);        
 
         $repeater->end_controls_tab();
 
@@ -376,7 +373,7 @@ class Query_Posts extends Base_Query {
                 ]
         );
 
-        // --------------------------------- [ Specific Posts-Pages ] 
+        // --------------------------------- [ Specific Posts-Pages ]
         $repeater_specific_posts = new Repeater();
 
         $repeater_specific_posts->add_control(
