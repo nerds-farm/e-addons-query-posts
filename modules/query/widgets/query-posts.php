@@ -1399,7 +1399,7 @@ class Query_Posts extends Base_Query {
                     if (!empty($custommeta_source_value)) {
                         $args['post__in'] = $custommeta_source_value;
                     } else {
-                        $args['post__in'] = -1;
+                        $args['post__in'] = array(-1);
                     }
                 }
                 break;
@@ -1469,7 +1469,7 @@ class Query_Posts extends Base_Query {
         // exclusion posts
         $excludedPosts = array();
         if (!empty($settings['exclude_posts'])) {
-            $excludedPosts = $settings['exclude_posts'];
+            $excludedPosts = Utils::explode($settings['exclude_posts']);
         }
         if (!empty($settings['exclude_myself'])) {
             array_push($excludedPosts, get_the_ID());
