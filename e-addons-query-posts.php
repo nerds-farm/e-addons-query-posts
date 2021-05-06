@@ -6,7 +6,7 @@
  * Plugin Name:       e-addons QUERY POSTS
  * Plugin URI:        https://e-addons.com
  * Description:       Build lists of any Post type and for any need
- * Version:           1.2
+ * Version:           1.2.1
  * Author:            Nerds Farm
  * Author URI:        https://nerds.farm
  * Text Domain:       e-addons-query-posts
