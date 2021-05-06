@@ -79,7 +79,7 @@ class Query_Posts extends Base_Query {
             ],
                 ]
         );
-
+        
         ////////////////////////////////////////////////////////////////////////////////
         // -------- ORDERING & DISPLAY items
         $repeater = new Repeater();
@@ -286,6 +286,8 @@ class Query_Posts extends Base_Query {
                     'title_field' => '<# var etichetta = item_type; etichetta = etichetta.replace("item_", ""); #><b class="e-add-item-name"><i class="fa {{{ item_type+"-ic" }}}" aria-hidden="true"></i> {{{item_text_label}}} | {{{ etichetta }}}</b>',
                 ]
         );
+        
+        $this->controls_items_grid_debug($this);
 
         $this->end_controls_section();
 
