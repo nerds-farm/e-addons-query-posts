@@ -61,6 +61,8 @@ class Query_Posts extends Base_Query {
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Timeline($this));
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Table($this));
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Simple_List($this));
+        
+        $this->add_skin(new \EAddonsQuery\Modules\Query\Skins\Horizontal_Scroll($this));
     }
 
     protected function _register_controls() {
@@ -246,7 +248,7 @@ class Query_Posts extends Base_Query {
         ]);
 
         // ------------ ADVANCED - TAB
-        // @p considero i campi avanzati: se è linkato (use_link) e se l'item è Bloock o Inline
+        // @p considero i campi avanzati: se è linkato (use_link) e se l'item è Block o Inline
         $this->controls_items_advanced($repeater);
 
         $repeater->end_controls_tab();
