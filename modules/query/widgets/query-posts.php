@@ -527,7 +527,7 @@ class Query_Posts extends Base_Query {
             'label' => __('Number of Posts', 'e-addons'),
             'type' => Controls_Manager::NUMBER,
             'default' => '10',
-            'description' => __('Number of Posts per Page, leave empty or -1 to display all'),
+            'description' => __('Number of Posts per Page, leave empty for global configuration or -1 to display all'),
             'condition' => [
                 'query_type' => ['get_cpt', 'automatic_mode'],
             ],
@@ -537,10 +537,19 @@ class Query_Posts extends Base_Query {
                 'posts_offset', [
             'label' => __('Posts Offset', 'e-addons'),
             'type' => Controls_Manager::NUMBER,
-            'default' => '0',
             'condition' => [
                 'query_type' => ['get_cpt', 'automatic_mode'],
                 'posts_per_page!' => '-1'
+            ],
+                ]
+        );
+        $this->add_control(
+                'posts_limit', [
+            'label' => __('Posts Limit', 'e-addons'),
+            'type' => Controls_Manager::NUMBER,
+            'condition' => [
+                'query_type' => ['get_cpt', 'automatic_mode'],
+                'posts_per_page!' => '-1',
             ],
                 ]
         );
@@ -1399,7 +1408,7 @@ class Query_Posts extends Base_Query {
                 } else {
                     $custommeta_source_value = $this->get_custom_meta_source_value($settings);
                     if (!empty($custommeta_source_value)) {
-                        $args['post__in'] = $custommeta_source_value;
+                        $args['post__in'] = Utils::explode($custommeta_source_value);
                     } else {
                         $args['post__in'] = array(-1);
                     }
@@ -1448,13 +1457,18 @@ class Query_Posts extends Base_Query {
         }
         // offset
         if (!empty($settings['posts_offset'])) {
-            $args['offset'] = $settings['posts_offset'];
+            $args['offset'] = $settings['posts_offset'];            
         }
+        
+        if (!empty($settings['posts_limit'])) {
+            unset($args['offset']);
+        }
+        
         // paginazione
         if ((!empty($settings['pagination_enable']) ) || !empty($settings['infiniteScroll_enable'])) {
-            $args['paged'] = $this->get_current_page();
+            $args['paged'] = $this->get_current_page();                            
         }
-
+        
         // order by
         if (!empty($settings['orderby'])) {
             $args['orderby'] = $settings['orderby'];
