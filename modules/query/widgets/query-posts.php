@@ -60,7 +60,9 @@ class Query_Posts extends Base_Query {
         //$this->add_skin( new \EAddonsForElementor\Modules\Query\Skins\Gridfilters( $this ) );
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Timeline($this));
         $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Table($this));
-        $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Simple_List($this));               
+        $this->add_skin(new \EAddonsForElementor\Modules\Query\Skins\Simple_List($this));
+        $this->add_skin(new \EAddonsQuery\Modules\Query\Skins\Horizontal_Scroll($this));
+        $this->add_skin(new \EAddonsQuery\Modules\Query\Skins\Cards($this));          
     }
 
     protected function _register_controls() {
@@ -387,7 +389,7 @@ class Query_Posts extends Base_Query {
                     'placeholder' => __('Select post', 'e-addons'),
                     'label_block' => true,
                     'query_type' => 'posts',
-                    'object_type' => get_post_types(array('public' => true))
+                    //'object_type' => get_post_types(array('public' => true))
                 ]
         );
         $this->add_control(
