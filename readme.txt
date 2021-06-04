@@ -4,7 +4,7 @@ Donate link: https://e-addons.com/
 Tags: loop, query, archive, template, posts, skins, filter
 Requires at least: 4.7
 Tested up to: 5.7.2
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 Requires PHP: 7.1
 
 Build lists of any Post type and for any need
@@ -14,6 +14,9 @@ Build lists of any Post type and for any need
 Create a custom Post query, choose the main layout skin, set the visibility, order and style of any element to get thousands of different solutions.
 
 == Changelog ==
+
+= 1.2.3 =
+* Fix: minor fix
 
 = 1.2.2 =
 * Add: Posts limit

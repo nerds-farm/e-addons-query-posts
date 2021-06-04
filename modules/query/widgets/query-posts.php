@@ -115,6 +115,7 @@ class Query_Posts extends Base_Query {
                 'item_custommeta' => __('Custom Field', 'e-addons'),
                 'item_readmore' => __('Read More', 'e-addons'),
                 'item_label' => __('Static', 'e-addons'),
+                'item_index' => __('Loop Index', 'e-addons'),
                 'item_template' => __('Template', 'e-addons'),
             ],
                 ]
