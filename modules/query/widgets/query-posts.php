@@ -1114,10 +1114,15 @@ class Query_Posts extends Base_Query {
                     'title' => __('Post Meta Author', 'e-addons'),
                     'icon' => 'fa fa-square',
                 ],
-                'current_autor' => [
-                    'title' => __('Current author', 'e-addons'),
+                'author_role' => [
+                    'title' => __('Role', 'e-addons'),
                     'icon' => 'fa fa-user-cog',
                 ],
+                'current_autor' => [
+                    'title' => __('Current author', 'e-addons'),
+                    'icon' => 'fa fa-user',
+                ],
+                
             ],
             'default' => 'post_author',
             'toggle' => false,
@@ -1140,6 +1145,23 @@ class Query_Posts extends Base_Query {
                     'description' => __('Selected Post Meta value. The meta must return an element of type array or comma separated string containing author IDs. (es: array[5,27,88] o 5,27,88)', 'e-addons'),
                     'condition' => [
                         'author_from' => 'custom_meta',
+                        'query_filter' => 'author'
+                    ]
+                ]
+        );
+        
+        $this->add_control(
+                'author_role',
+                [
+                    'label' => __('Author <b>role</b>', 'e-addons'),
+                    'type' => 'e-query',
+                    'placeholder' => __('Search Roles', 'e-addons'),
+                    'multiple' => true,
+                    'query_type' => 'users',
+                    'object_type' => 'role',
+                    'label_block' => true,
+                    'condition' => [
+                        'author_from' => 'author_role',
                         'query_filter' => 'author'
                     ]
                 ]
@@ -1585,6 +1607,12 @@ class Query_Posts extends Base_Query {
             case 'current_autor':
                 $author_id = get_the_author_meta('ID');
                 $author_args['author'] = $author_id;
+                break;
+            case 'author_role':
+                if (!empty($settings['author_role'])) {
+                    $author_ids = get_users( array('role__in' => $settings['author_role'], 'fields' => 'ID') );
+                    $author_args['author'] = implode(',', $author_ids);
+                }
                 break;
         }
         //
