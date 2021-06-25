@@ -28,7 +28,7 @@ class Query_Posts extends Base_Query {
     public function __construct($data = [], $args = null) {
         parent::__construct($data, $args);
         //$this->register_script('assets/js/e-addons-query-grid.js'); // from module folder
-        //$this->register_style('assets/css/e-addons-query-grid.css'); // from module folder
+        //$this->register_style('assets/css/e-addons-query-grid.css'); // from module folder        
     }
 
     public function get_pid() {
@@ -1839,6 +1839,63 @@ class Query_Posts extends Base_Query {
             );
         }
         return $date_args;
+    }
+    
+    public function loop($skin, $query) {
+        /** @p qui identifico se mi trovo in un loop, altrimenti uso la wp_query */
+        if ($query->in_the_loop) {
+            $skin->current_permalink = get_permalink();
+            $skin->current_id = get_the_ID();
+            $skin->current_data = get_post(get_the_ID());
+            //
+            $skin->render_element_item();
+        } else {
+            $i = 0;
+            $j = 0;
+            $offset = $skin->parent->get_settings_for_display('posts_offset');
+            $limit = $skin->parent->get_settings_for_display('posts_limit');
+            while ($query->have_posts()) {
+                $i++;
+                $query->the_post();
+                $continue = false;
+                if ($limit) {
+                    if ($offset) {
+                        if ($i <= $offset) {
+                            $continue = true;
+                        }
+                    }
+                    if (!$continue) {
+                        $j++;
+                    }
+                    if ($j > $limit) {
+                        $continue = true;
+                    }
+                }
+                if (!$continue) {
+                    $skin->current_permalink = get_permalink();
+                    $skin->current_id = get_the_ID();
+                    $skin->current_data = get_post(get_the_ID());
+                    //
+                    $skin->render_element_item();
+                }
+            }
+        }
+        wp_reset_postdata();
+    }
+    
+    public function should_render($render, $skin, $query) {
+        if (!$query->found_posts) {
+            $render = false;
+        }
+        return $render;
+    }
+    
+    public function pagination__page_limit($page_limit, $skin, $query, $settings) {
+        $page_limit = $query->max_num_pages;
+        return $page_limit;
+    }
+    public function pagination__page_length($page_length, $skin, $query, $settings) {
+        return $query->post_count;
     }
 
     /* public function render() {
