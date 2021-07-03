@@ -1433,7 +1433,7 @@ class Query_Posts extends Base_Query {
                 } else {
                     $custommeta_source_value = $this->get_custom_meta_source_value($settings);
                     if (!empty($custommeta_source_value)) {
-                        $args['post__in'] = Utils::explode($custommeta_source_value);
+                        $args['post__in'] = Utils::explode($custommeta_source_value, ',', 0, 'intval');
                     } else {
                         $args['post__in'] = array(-1);
                     }
